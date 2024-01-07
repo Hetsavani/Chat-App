@@ -1,0 +1,97 @@
+.screen{
+    width: 100%;
+}
+.header{
+    height: 15vh;
+    background-color: blue;
+    margin: 0;
+    color: white;
+    font-size: 200%;
+    font-weight: bold;
+    padding: 1%;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.myCol-1{
+    width: 70%;
+}
+.myCol-2{
+    width: 30%;
+}
+
+.chat{
+    /* background-color: skyblue; */
+    height: 80vh;
+    overflow-y: scroll;
+    
+    margin: 0;
+}
+
+.chatBubble{
+    padding: 15px;
+    /* border: 2px solid; */
+    /* background-color: aliceblue; */
+    display: flex;
+    border-radius: 25px;
+    animation: chat_animat 0.8s;
+}
+
+@keyframes chat_animat {
+    0%{
+        /* opacity: 0; */
+        transform: scale(0.1);
+    }
+    50%{
+        transform: scale(1.2);
+    }
+    100%{
+        transform: scale(1.0);
+        /* opacity: 1; */
+    }
+}
+
+.chatcontainer{
+    display: flex;
+    margin: 10px;
+}
+
+.me{
+    flex-direction: row-reverse;
+}
+.me .chatBubble{
+    /* background-color: rgb(90, 131, 244); */
+    background-color: black;
+    color: white;
+}
+
+.other .chatBubble{
+    background-color: #AAAAAA;
+}
+
+.inputs{
+    position: fixed;
+    margin: 5px;
+    bottom: 0px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.inputs input {
+    padding: 10px 10px;
+    flex-grow: 1;
+    border-radius: 25px;
+    border: none;
+    background-color: #CCCCCC;
+}
+.inputs input:focus{
+    border: none;
+    border-color: aqua;
+}
+.inputs button{
+    padding: 10px;
+    width: 80px;
+    margin-left: 5px;
+    margin-right: 10px;
+    border-radius: 25px;
+}
