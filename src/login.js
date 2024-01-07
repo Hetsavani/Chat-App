@@ -57,6 +57,7 @@ function Login() {
         <div className="row">
           <input
             type="text"
+            class="form-control"
             onChange={(e) => {
               setName(e.target.value);
             }}
@@ -65,7 +66,7 @@ function Login() {
         <div className="row">
           <div className="col">
             <button
-              class="editBtn"
+              class="editBtn btn btn-primary"
               onClick={() => {
                 redirect();
               }}
@@ -73,6 +74,7 @@ function Login() {
               click
             </button>
             <button
+              class="btn btn-primary"
               onClick={() => {
                 googleLogin();
               }}
