@@ -147,7 +147,7 @@ function DashboardPage() {
   return (
     <>
       <div className={styles.myBody}>
-        <div class={styles.enter_header}>
+        <div className={styles.enter_header}>
           <div className={styles.header}>Welcome , {name}</div>
           <div className={styles.profile}>
             <button
