@@ -1,0 +1,97 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  .myBody {
+    background: linear-gradient(rgb(35, 11, 74) 60%, white 40%);
+    margin-top: 0px;
+    height: 70vh;
+    width: 100%;
+    position: absolute;
+  }
+  
+  .enter_header {
+    color: white;
+    font-size: 30px;
+    display: flex;
+    justify-content: space-between;
+    /* background-color: red; */
+  }
+  
+  .myCon {
+    margin-top: 5%;
+    align-items: center;
+    /* overflow-y: auto; */
+  }
+  /* .main1{
+    width: 630px;
+    background-color: aqua;
+  } */
+  /* storedChat.module.css */
+  
+  .meetingsContainer {
+    margin-top: 10px; /* Add spacing as necessary */
+    width: 625px;
+    height: 430px; /* Adjust height as needed */
+    overflow-y: scroll; /* Ensure scrolling is enabled */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .clearBtn{
+    margin-bottom: 0px;
+  }
+  
+  .meetingsContainer::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for WebKit browsers */
+  }
+  .main1 {
+    margin-bottom: 10px; /* Add spacing between items */
+  }
+  .main1:hover{
+    transform: scale(1.02);
+    transition-duration: 0.2s;
+  }
+  
+  .Con {
+    margin: auto;
+    margin-top: auto;
+    /* vertical-align: middle; */
+    /* align-items: 40%; */
+    /* margin-top: 12%; */
+    margin-bottom: 10px;
+    height: 100px;
+    width: 600px;
+    background-color: white;
+    border-radius: 30px;
+    /* border: 1px solid black; */
+    padding: 20px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    animation: con_box 1.5s;
+  }
+  
+  .mytitle {
+    color: white;
+    /* background-color: green; */
+    display: flex;
+    justify-content: center;
+    font-size: xx-large;
+  }
+  .meeting{
+  
+  }
+  
+  .noMeetings {
+    /* display: flex; */
+    justify-content: center;
+    opacity: 0.9;
+    font-size: xx-large;
+    /* padding-top: 50px; */
+    height: 450px;
+    padding-top: 120px;
+    /* display: table-cell; */
+    /* align-items: center; */
+    /* vertical-align: middle; */
+    text-align: center;
+  
+    /* padding-bottom: 25px; */
+  }

@@ -10,6 +10,8 @@ import Login from "./login";
 import DashboardPage from "./Enter/dashboard";
 import Signup from "./signup";
 import PopupForm from "./Enter/trials";
+import StoredChat from "./StoredChat";
+import StoredChatLayout from "./storedMeeting";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -38,6 +40,8 @@ root.render(
       <Route path="/createacc" element={<CreateAcc />} />
       {/* <Route path="/enter/:name" element={<EnterPage />} /> */}
       <Route path="/dashboard" element={<DashboardPage />} />
+      <Route path="/storedmeetings" element={<StoredChat />} />
+      <Route path="/storedchat" element={<StoredChatLayout/>} />
       <Route path="/chat/:meetingId" element={<Layout />} />
     </Routes>
   </BrowserRouter>

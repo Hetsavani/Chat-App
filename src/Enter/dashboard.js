@@ -75,12 +75,24 @@ function DashboardPage() {
               db,
               `meetings/${joinMeetingId}/membercount`
             );
+            const TotalMemberCountRef = ref(
+              db,
+              `meetings/${joinMeetingId}/Totalmembercount`
+            );
             get(MemberCountRef).then((snap) => {
               if (snap.exists()) {
                 const count = snap.val();
                 const countRef = set(MemberCountRef, count + 1);
               } else {
                 set(MemberCountRef, 1);
+              }
+            });
+            get(TotalMemberCountRef).then((snap) => {
+              if (snap.exists()) {
+                const count = snap.val();
+                const countRef = set(TotalMemberCountRef, count + 1);
+              }else{
+                set(TotalMemberCountRef,1);
               }
             });
           }
@@ -106,6 +118,7 @@ function DashboardPage() {
     const chatRef = push(MemberListRef);
     set(chatRef, name);
     const MemberCountRef = ref(db, `meetings/${joinMeetingId}/membercount`);
+    const TotMemberCountRef = ref(db, `meetings/${joinMeetingId}/Totalmembercount`);
     get(MemberCountRef).then((snap) => {
       if (snap.exists()) {
         const count = snap.val();
@@ -114,8 +127,18 @@ function DashboardPage() {
         set(MemberCountRef, 1);
       }
     });
+    get(TotMemberCountRef).then((snap) => {
+      if (snap.exists()) {
+        const count = snap.val();
+        const countRef = set(TotMemberCountRef, count + 1);
+      } else {
+        set(TotMemberCountRef, 1);
+      }
+    });
     // isCreateClicked = true;
     sessionStorage.setItem("isCreated", true);
+    const currentDatetime = new Date().toISOString();
+    sessionStorage.setItem("startDate",currentDatetime);
     nav("/chat/" + joinMeetingId);
   }
   const [isOpen, setIsOpen] = useState(false);
@@ -136,7 +159,7 @@ function DashboardPage() {
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <div class="dropdown"></div>
+              {/* <div class="dropdown"></div> */}
             </button>
             <div
               class="dropdown-menu"
@@ -172,7 +195,9 @@ function DashboardPage() {
                   Edit Profile
                 </a>
               </div>
-              <div style={{ height: "40px" }}>
+              <div style={{ height: "40px" }} onClick={
+                ()=>{nav('/storedmeetings')}
+              }>
                 <a class="dropdown-item" href="#">
                   recent meetings
                 </a>
@@ -298,17 +323,19 @@ function DashboardPage() {
                       ></div>
                       <div className="col-3" style={{ float: "left" }}>
                         {/* {name} */}
-                        <input className="form-label" type="text" value={name}></input>
-                        </div>
+                        <input
+                          className="form-label"
+                          type="text"
+                          value={name}
+                        ></input>
+                      </div>
                       {/* <div className="col justify-content-end" style={{ float: "right" }}>Edit</div> */}
                     </div>
                     <div>
-                    <button type="submit" style={{ float: "left" }}>
-                      
-                      Submit
-                    </button>
+                      <button type="submit" style={{ float: "left" }}>
+                        Submit
+                      </button>
                     </div>
-                    
                   </form>
                 </div>
               </div>

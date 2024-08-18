@@ -16,9 +16,9 @@ function Signup() {
         <div className={styles.Con}>
           <div className={styles.mytitle}>Enter your email</div>
           <input type="email" class={styles.input} placeholder="Email" />
-          <div className="btn joinBtn">Get OTP</div>
+          <div className={"btn "+styles.joinBtn}>Get OTP</div>
           <input type="email" class={styles.input} placeholder="Enter your OTP" />
-          <div className="btn createBtn" onClick={
+          <div className={"btn "+styles.createBtn} onClick={
             ()=>{
                 nav("/createacc");
             }
