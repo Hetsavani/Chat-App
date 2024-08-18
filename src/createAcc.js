@@ -51,7 +51,7 @@ function CreateAcc() {
           Welcome , "Name"
         </div>
         <div
-          id="Con1"
+          id={"Con1"}
           className={styles.Con}
           style={{ height: "75vh", marginTop: "5%", animation: "none" }}
         >
@@ -124,7 +124,7 @@ function CreateAcc() {
                 setUser(e.target.value);
               }}
             />
-            <button type="submit" className="btn createBtn">
+            <button type="submit" className={"btn "+styles.createBtn}>
               Create Account
             </button>
             {/* <div className="btn createBtn">

@@ -10,8 +10,8 @@ import Login from "./login";
 import DashboardPage from "./Enter/dashboard";
 import Signup from "./signup";
 import PopupForm from "./Enter/trials";
+import StoredChat from "./StoredChat";
 import StoredChatLayout from "./storedMeeting";
-import StoredChat from './StoredChat';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 

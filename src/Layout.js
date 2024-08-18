@@ -27,6 +27,7 @@ function Layout() {
   const [myMembers, setMyMembers] = useState([]);
   const [countOfMembers, setCountOfMembers] = useState(1);
   const nav = useNavigate();
+  var highMember = 0;
   useEffect(() => {
     setIsCreated(sessionStorage.getItem("isCreated"));
     var temp = sessionStorage.getItem("isCreated");
@@ -87,9 +88,13 @@ function Layout() {
         });
       } else {
         const MemberCountRef = ref(db, `meetings/${meetingId}/membercount`);
+
         get(MemberCountRef).then((snap) => {
           if (snap.exists()) {
             const count = snap.val();
+            // if(count > highMember){
+            //   highMember = count;
+            // }
             const countRef = set(MemberCountRef, count - 1);
           } else {
             set(MemberCountRef, 1);
@@ -148,12 +153,12 @@ function Layout() {
             saveMeeting();
             nav("/dashboard");
           } else if (result.isDenied) {
-            const chatListRef = ref(db, `meetings/${meetingId}`);
-            remove(chatListRef).then(() => {
-              Swal.fire("Chats are not saved", "", "info");
-              nav("/dashboard");
-            });
+            Swal.fire("Chats are not saved", "", "info");
           }
+          const chatListRef = ref(db, `meetings/${meetingId}`);
+          remove(chatListRef).then(() => {
+            nav("/dashboard");
+          });
         });
       }
     });
@@ -162,22 +167,88 @@ function Layout() {
   function saveMeeting() {
     const db = getDatabase();
     const sourceRef = ref(db, `meetings/${meetingId}/chats`);
-    const destinationPath = `storedmeetings/${meetingId}/chats`;
-    const destinationRef = ref(db, destinationPath);
+    // const destinationPath = `storedmeetings/${meetingId}/chats`;
+    // const destinationRef = ref(db, destinationPath);
     get(sourceRef)
       .then((snapshot) => {
         if (snapshot.exists()) {
           // Data exists at the source path
+          const currentDatetime = new Date().toISOString();
+          // sessionStorage.setItem("startDate",currentDatetime);
           const data = snapshot.val();
-
-          // Write data to the destination path
-          set(destinationRef, data)
-            .then(() => {
-              console.log("Data copied successfully.");
+          const TotalMemberCountRef = ref(
+            db,
+            `meetings/${meetingId}/Totalmembercount`
+          );
+          get(TotalMemberCountRef)
+            .then((snap) => {
+              if (snap.exists()) {
+                const count = snap.val();
+                console.log("snap " + snap.val());
+                highMember = count;
+                console.log("get hm : " + highMember);
+              }
+              console.log("highmember : " + highMember);
+              return fetch("http://localhost:3030/storechat", {
+                method: "POST",
+                body: JSON.stringify({
+                  data,
+                  meetingId,
+                  name,
+                  id: sessionStorage.getItem("userID"),
+                  highMember,
+                  startDatetime: sessionStorage.getItem("startDate"),
+                  endDatetime: currentDatetime,
+                }),
+                headers: { "content-type": "application/json" },
+              });
+            })
+            .then((response) => response.json())
+            .then((result) => {
+              console.log("Fetch result: ", result);
             })
             .catch((error) => {
-              console.error("Error copying data:", error);
+              console.error("Error fetching data:", error);
             });
+          // get(TotalMemberCountRef)
+          //   .then((snap) => {
+          //     if (snap.exists()) {
+          //       const count = snap.val();
+          //       // if(count > highMember){
+          //       //   highMember = count;
+          //       // }
+          //       console.log("snap "+snap.val());
+          //       highMember = count;
+          //       console.log("get hm : "+highMember);
+          //     }
+          //   })
+          //   .then((snap) => {
+          //     console.log("highmember : "+highMember);
+          //     fetch("http://localhost:3030/storechat", {
+          //       method: "POST",
+          //       body: JSON.stringify({
+          //         data,
+          //         meetingId,
+          //         name,
+          //         id: sessionStorage.getItem("userID"),
+          //         highMember,
+          //         startDatetime: sessionStorage.getItem("startDate"),
+          //         endDatetime: currentDatetime,
+          //       }),
+          //       headers: { "content-type": "application/json" },
+          //     })
+          //       .then()
+          //       .then();
+          //   });
+
+          // Write data to the destination path
+          // set(destinationRef, data)
+          //   .then(() => {
+          //     console.log("Data copied successfully.");
+          //   })
+          //   .catch((error) => {
+          //     console.error("Error copying data:", error);
+          //   });
         } else {
           console.log("No data found at the source path.");
         }
@@ -350,7 +421,14 @@ function Layout() {
       <div className="screen">
         <div className="header">
           <div className="row">
-            <div className="myCol-1 col-10">Welcome to chat : {name}</div>
+            <div className="myCol-1 col-10">
+              <div className="row">
+                <div className="col">Welcome to chat : {name}</div>
+              </div>
+              <div className="row">
+                <div className="col h6 mt-2">Meeting ID : {meetingId}</div>
+              </div>
+            </div>
             <div className="col-1 mt-0">
               <button
                 className="btn btn-dark text-white mt-0 dropdown-toggle"
@@ -360,7 +438,7 @@ function Layout() {
                 <div className="col">Members</div>
                 <div className="col">{countOfMembers}</div>
               </button>
-              <ul class="dropdown-menu dropdown-menu-end">{formattedMember}</ul>
+              <ul className="dropdown-menu dropdown-menu-end">{formattedMember}</ul>
             </div>
             <div className="myCol-2 col">
               <div className="row">

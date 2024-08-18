@@ -1,3 +1,5 @@
+// import "../signup.css";
+// import "../e"
 import { useNavigate } from "react-router-dom";
 import styles from "./dashboard.module.css";
 import { useEffect, useState } from "react";
@@ -147,7 +149,7 @@ function DashboardPage() {
   return (
     <>
       <div className={styles.myBody}>
-        <div className={styles.enter_header}>
+        <div class={styles.enter_header}>
           <div className={styles.header}>Welcome , {name}</div>
           <div className={styles.profile}>
             <button
