@@ -129,7 +129,7 @@ function StoredChat() {
               <div
                 className="clearBtn btn mx-auto text-danger"
                 onClick={() => {
-                  fetch("http://localhost:3030/storedchat", {
+                  fetch("https://chatapi-sgoo.onrender.com/storedchat", {
                     method: "POST",
                     body: JSON.stringify({ userId,isClearAll: true}),
                     headers: { "content-type": "application/json" },
