@@ -189,7 +189,7 @@ function Layout() {
                 console.log("get hm : " + highMember);
               }
               console.log("highmember : " + highMember);
-              return fetch("http://localhost:3030/storechat", {
+              return fetch("https://chatapi-sgoo.onrender.com/storechat", {
                 method: "POST",
                 body: JSON.stringify({
                   data,
