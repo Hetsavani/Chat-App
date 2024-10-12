@@ -138,6 +138,7 @@ function Layout() {
       if (result.isConfirmed) {
         const db = getDatabase();
         const meetingStatusRef = ref(db, `meetings/${meetingId}/status`);
+        setMyMembers();
         set(meetingStatusRef, "ended");
         Swal.fire({
           title: "Do you want to save the chat of meeting?",
@@ -146,20 +147,22 @@ function Layout() {
           showCancelButton: false,
           confirmButtonText: "Save",
           denyButtonText: `Don't save`,
-        }).then((result) => {
+        }).then(async (result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
             Swal.fire("Saved!", "", "success");
-            saveMeeting();
+            await saveMeeting();
             nav("/dashboard");
           } else if (result.isDenied) {
             Swal.fire("Chats are not saved", "", "info");
           }
+        })
+        .then(async () => {
           const chatListRef = ref(db, `meetings/${meetingId}`);
-          remove(chatListRef).then(() => {
+          await remove(chatListRef).then(() => {
             nav("/dashboard");
           });
-        });
+        })
       }
     });
   }
@@ -180,75 +183,45 @@ function Layout() {
             db,
             `meetings/${meetingId}/Totalmembercount`
           );
-          get(TotalMemberCountRef)
-            .then((snap) => {
-              if (snap.exists()) {
-                const count = snap.val();
-                console.log("snap " + snap.val());
-                highMember = count;
-                console.log("get hm : " + highMember);
-              }
-              console.log("highmember : " + highMember);
-              return fetch("http://localhost:3030/storechat", {
-                method: "POST",
-                body: JSON.stringify({
-                  data,
-                  meetingId,
-                  name,
-                  id: sessionStorage.getItem("userID"),
-                  highMember,
-                  startDatetime: sessionStorage.getItem("startDate"),
-                  endDatetime: currentDatetime,
-                }),
-                headers: { "content-type": "application/json" },
+          console.log(
+            "::::::::::::::::::::::: " + TotalMemberCountRef.toString()
+          );
+          get(TotalMemberCountRef).then((snap) => {
+            // if (snap.exists()) {
+            const count = snap.val();
+            console.log("snap " + snap.val());
+            setMyMembers(count);
+            console.log("get hm : " + count);
+            // }
+            console.log("highmember : " + highMember);
+            return fetch("https://chatapi-sgoo.onrender.com/storechat", {
+            // fetch("http://localhost:3030/storechat", {
+              method: "POST",
+              body: JSON.stringify({
+                data,
+                meetingId,
+                name,
+                id: sessionStorage.getItem("userID"),
+                count,
+                startDatetime: sessionStorage.getItem("startDate"),
+                endDatetime: currentDatetime,
+              }),
+              headers: { "content-type": "application/json" },
+            })
+              .then((response) => response.json())
+              // .then((result) => {
+              //   console.log("Fetch result: ", result);
+              // })
+              // .then(() => {
+              //   const chatListRef = ref(db, `meetings/${meetingId}`);
+              //   remove(chatListRef).then(() => {
+              //     nav("/dashboard");
+              //   });
+              // })
+              .catch((error) => {
+                console.error("Error fetching data:", error);
               });
-            })
-            .then((response) => response.json())
-            .then((result) => {
-              console.log("Fetch result: ", result);
-            })
-            .catch((error) => {
-              console.error("Error fetching data:", error);
-            });
-          // get(TotalMemberCountRef)
-          //   .then((snap) => {
-          //     if (snap.exists()) {
-          //       const count = snap.val();
-          //       // if(count > highMember){
-          //       //   highMember = count;
-          //       // }
-          //       console.log("snap "+snap.val());
-          //       highMember = count;
-          //       console.log("get hm : "+highMember);
-          //     }
-          //   })
-          //   .then((snap) => {
-          //     console.log("highmember : "+highMember);
-          //     fetch("http://localhost:3030/storechat", {
-          //       method: "POST",
-          //       body: JSON.stringify({
-          //         data,
-          //         meetingId,
-          //         name,
-          //         id: sessionStorage.getItem("userID"),
-          //         highMember,
-          //         startDatetime: sessionStorage.getItem("startDate"),
-          //         endDatetime: currentDatetime,
-          //       }),
-          //       headers: { "content-type": "application/json" },
-          //     })
-          //       .then()
-          //       .then();
-          //   });
-
-          // Write data to the destination path
-          // set(destinationRef, data)
-          //   .then(() => {
-          //     console.log("Data copied successfully.");
-          //   })
-          //   .catch((error) => {
-          //     console.error("Error copying data:", error);
-          //   });
+          });
         } else {
           console.log("No data found at the source path.");
         }
@@ -327,16 +300,6 @@ function Layout() {
     console.log("members : " + members);
   }, [db, meetingId, countOfMembers]);
 
-  // useEffect(() => {
-  //   const MemberCountRef = ref(db, `meetings/${meetingId}/membercount`);
-  //   get(MemberCountRef).then((snap) => {
-  //     if(snap.exists()){
-  //       const count = snap.val();
-  //       // setCountOfMembers((prevCount) => prevCount + count);
-  //       // setCountOfMembers(count);
-  //     }
-  //   });
-  // }, [countOfMembers]);
   useEffect(() => {
     const MemberCountRef = ref(db, `meetings/${meetingId}/membercount`);
 
@@ -359,18 +322,6 @@ function Layout() {
       nav("/dashboard");
     }
   }, [isMeetingActive, nav]);
-  // console.log("chat out: "+chats);
-  // const formattedChat = chats.map((c) => {
-  //   var temp = c.name == name ? "me" : "other";
-  //   return (
-  //     <div className={`chatcontainer ${temp}`}>
-  //       <div className="chatBubble">
-  //         <Name temp={temp} c={c} />
-  //         <span>{c.message}</span>
-  //       </div>
-  //     </div>
-  //   );
-  // });
 
   const formattedChat = chats.map((c, index) => (
     <div
@@ -388,17 +339,43 @@ function Layout() {
     if (index === members.length - 1) {
       return (
         <li>
-          <button class="dropdown-item bg-dark text-light" type="button">
-            {c}
+          <button class="dropdown-item" type="button">
+            <div className="d-flex px-2">
+              <div
+                className="bg-success"
+                style={{
+                  borderRadius: "50%",
+                  height: "7px",
+                  width: "7px",
+                  margin: "10px 0px",
+                  marginLeft: "-10px",
+                  marginRight: "10px",
+                }}
+              ></div>
+              <div>{c}</div>
+            </div>
           </button>
         </li>
       );
     }
     return (
-      <li className="border-bottom border-light opacity-50">
-        <button class="dropdown-item bg-dark text-light" type="button">
-          {c}
-        </button>
+      <li className="border-bottom">
+        <button class="dropdown-item" type="button">
+            <div className="d-flex px-2">
+              <div
+                className="bg-success"
+                style={{
+                  borderRadius: "50%",
+                  height: "7px",
+                  width: "7px",
+                  margin: "10px 0px",
+                  marginLeft: "-10px",
+                  marginRight: "10px",
+                }}
+              ></div>
+              <div>{c}</div>
+            </div>
+          </button>
       </li>
     );
   });
@@ -416,61 +393,123 @@ function Layout() {
       sendChat();
     }
   };
+  // <div className="header">
+  //         <div className="row">
+  //           <div className="myCol-1 col-10">
+  //             <div className="row">
+  //               <div className="col">Welcome to chat : {name}</div>
+  //             </div>
+  //             <div className="row">
+  //               <div className="col h6 mt-2">Meeting ID : {meetingId}</div>
+  //             </div>
+  //           </div>
+  //           <div className="col-1 mt-0">
+  //             <button
+  //               className="btn btn-dark text-white mt-0 dropdown-toggle"
+  //               data-bs-toggle="dropdown"
+  //               aria-expanded="false"
+  //             >
+  //               <div className="col">Members</div>
+  //               <div className="col">{countOfMembers}</div>
+  //             </button>
+  //             <ul className="dropdown-menu dropdown-menu-end">{formattedMember}</ul>
+  //           </div>
+  //           <div className="myCol-2 col">
+  //             <div className="row">
+  //               <div className="col">
+  //                 {isCreated ? (
+  //                   <button
+  //                     className="exit_btn"
+  //                     onClick={() => {
+  //                       endMeeting();
+  //                       sessionStorage.setItem("isCreated", false);
+  //                     }}
+  //                   >
+  //                     {/* <span>{isCreated?'Leave meeting':'End meeting'}</span> */}
+  //                     <span>End meeting</span>
+  //                   </button>
+  //                 ) : (
+  //                   <button
+  //                     className="exit_btn"
+  //                     onClick={() => {
+  //                       leaveMeeting();
+  //                       sessionStorage.setItem("isCreated", false);
+  //                     }}
+  //                   >
+  //                     {/* <span>{isCreated?'Leave meeting':'End meeting'}</span> */}
+  //                     <span>Leave meeting</span>
+  //                   </button>
+  //                 )}
+  //               </div>
+  //             </div>
+  //             <div className="row online_count">
+  //               <div className="col">Online:</div>
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </div>
   return (
     <>
       <div className="screen">
         <div className="header">
           <div className="row">
-            <div className="myCol-1 col-10">
-              <div className="row">
-                <div className="col">Welcome to chat : {name}</div>
-              </div>
-              <div className="row">
-                <div className="col h6 mt-2">Meeting ID : {meetingId}</div>
-              </div>
-            </div>
-            <div className="col-1 mt-0">
-              <button
-                className="btn btn-dark text-white mt-0 dropdown-toggle"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
+            <div className="myCol-1 col-9">
+              {/* <div className="row bg-danger"> */}
+              <span className="me-3">{name}</span>
+              <span
+                className="h6 mt-2 my-auto py-1 px-2 rounded"
+                style={{ backgroundColor: "#3366ff" }}
               >
-                <div className="col">Members</div>
-                <div className="col">{countOfMembers}</div>
-              </button>
-              <ul className="dropdown-menu dropdown-menu-end">{formattedMember}</ul>
+                Meeting ID : {meetingId}
+              </span>
+              {/* </div> */}
             </div>
-            <div className="myCol-2 col">
-              <div className="row">
-                <div className="col">
-                  {isCreated ? (
-                    <button
-                      className="exit_btn"
-                      onClick={() => {
-                        endMeeting();
-                        sessionStorage.setItem("isCreated", false);
-                      }}
-                    >
-                      {/* <span>{isCreated?'Leave meeting':'End meeting'}</span> */}
-                      <span>End meeting</span>
-                    </button>
-                  ) : (
-                    <button
-                      className="exit_btn"
-                      onClick={() => {
-                        leaveMeeting();
-                        sessionStorage.setItem("isCreated", false);
-                      }}
-                    >
-                      {/* <span>{isCreated?'Leave meeting':'End meeting'}</span> */}
-                      <span>Leave meeting</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-              <div className="row online_count">
-                <div className="col">Online:</div>
-              </div>
+            <div className="col">
+              <span className="mt-0 ms-4 me-5">
+                <button
+                  className="btn text-white mt-0"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  style={{ backgroundColor: "#3366ff" }}
+                >
+                  <div className="row">
+                    <div className="col">Members ({countOfMembers} online)</div>
+                  </div>
+                  {/* <div className="col">{countOfMembers}</div> */}
+                </button>
+                <ul className="dropdown-menu dropdown-menu-end">
+                  {formattedMember}
+                </ul>
+              </span>
+              {/* <div className="col"> */}
+              {/* <div className="row"> */}
+              <span>
+                {isCreated ? (
+                  <button
+                    className="exit_btn"
+                    onClick={() => {
+                      endMeeting();
+                      sessionStorage.setItem("isCreated", false);
+                    }}
+                  >
+                    {/* <span>{isCreated?'Leave meeting':'End meeting'}</span> */}
+                    <span>End meeting</span>
+                  </button>
+                ) : (
+                  <button
+                    className="exit_btn"
+                    onClick={() => {
+                      leaveMeeting();
+                      sessionStorage.setItem("isCreated", false);
+                    }}
+                  >
+                    {/* <span>{isCreated?'Leave meeting':'End meeting'}</span> */}
+                    <span>Leave meeting</span>
+                  </button>
+                )}
+                {/* </div> */}
+                {/* </div> */}
+              </span>
             </div>
           </div>
         </div>

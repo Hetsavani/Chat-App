@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 function StoredChat() {
   const nav = useNavigate();
   const name = sessionStorage.getItem("username");
-  const apiUrl = "http://localhost:3030/getstoredmeetings";
+  const apiUrl = "https://chatapi-sgoo.onrender.com/getstoredmeetings";
   const userId = sessionStorage.getItem("userID");
   const [meetings, setMeetings] = useState([]);
   const [temp,settemp] = useState(false);
@@ -129,7 +129,7 @@ function StoredChat() {
               <div
                 className="clearBtn btn mx-auto text-danger"
                 onClick={() => {
-                  fetch("http://localhost:3030/storedchat", {
+                  fetch("https://chatapi-sgoo.onrender.com/storedchat", {
                     method: "POST",
                     body: JSON.stringify({ userId,isClearAll: true}),
                     headers: { "content-type": "application/json" },
