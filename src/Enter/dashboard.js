@@ -208,7 +208,7 @@ function DashboardPage() {
                     style={{ color: "red" }}
                     onClick={() => {
                       sessionStorage.clear();
-                      nav("/");
+                      nav("/login");
                     }}
                   >
                     Logout

@@ -12,6 +12,7 @@ import Signup from "./signup";
 import PopupForm from "./Enter/trials";
 import StoredChat from "./StoredChat";
 import StoredChatLayout from "./storedMeeting";
+import LandingPage from "./Hero/LandingPage"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -35,7 +36,8 @@ root.render(
   {/* <PopupForm/> */}
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={<LandingPage/>}></Route>
+      <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/createacc" element={<CreateAcc />} />
       {/* <Route path="/enter/:name" element={<EnterPage />} /> */}

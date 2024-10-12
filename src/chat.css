@@ -35,19 +35,19 @@
 .exit_btn {
     display: inline-block;
     border-radius: 4px;
+    height: 40px;
     /* background-color: #3d405b; */
-    background-color: red;
+    background-color: rgb(230, 51, 51);
     border: none;
     color: #FFFFFF;
     text-align: center;
-    font-size: 10px;
+    font-size: 15px;
     padding: 5px 0px;
     width: 100px;
-    float: right;
+    /* float: right; */
     transition: all 0.5s;
     cursor: pointer;
     /* margin: 5px; */
-    margin-bottom: 5px;
    }
    
    .exit_btn span {
@@ -64,7 +64,7 @@
     top: 0;
     right: -15px;
     transition: 0.5s;
-    font-size: 14px;
+    font-size: 15px;
    }
    
    .exit_btn:hover span {
