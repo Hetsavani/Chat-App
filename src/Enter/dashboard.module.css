@@ -20,7 +20,6 @@
   }
   .profile{
     float: right;
-    background-image: url('../../assets/profile_img.jpg');
     background-size: cover; 
     border-radius: 50%;
     /* background-color: azure;
@@ -36,7 +35,6 @@
     width: 50px;
   }
   .detailImg{
-    background-image: url('../../assets/profile_img.jpg');
     height: 50px;
     width: 50px;
     background-size: cover; 
