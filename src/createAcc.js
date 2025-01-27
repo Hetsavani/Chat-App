@@ -9,7 +9,7 @@ function CreateAcc() {
   const [user, setUser] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-  const apiUrl = "http://localhost:3030/add";
+  const apiUrl = "https://chatapi-sgoo.onrender.com/add";
   // Function to handle form submission
   const passwordCheck = (e) => {
     e.preventDefault();
