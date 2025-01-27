@@ -191,7 +191,6 @@ function DashboardPage() {
                 </a>
               </div>
             </div>
-            {/* <img class="profile-logo" src="../../assets/profile_img.jpg" alt="Profile Image"></img> */}
           </div>
         </div>
         <div className={styles.Con}>
